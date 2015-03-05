@@ -1,0 +1,14 @@
+PODS:
+  - SIAEnumerator (0.1.0)
+
+DEPENDENCIES:
+  - SIAEnumerator (from `../`)
+
+EXTERNAL SOURCES:
+  SIAEnumerator:
+    :path: ../
+
+SPEC CHECKSUMS:
+  SIAEnumerator: 319ccc8fcbe9e5fb71b12f092aa0e7c2323058f8
+
+COCOAPODS: 0.35.0

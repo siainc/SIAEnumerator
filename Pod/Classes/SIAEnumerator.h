@@ -3,7 +3,7 @@
 //  SIAEnumerator
 //
 //  Created by KUROSAKI Ryota on 2015/02/17.
-//  Copyright (c) 2015 SI Agency Inc. All rights reserved.
+//  Copyright (c) 2015-2016 SI Agency Inc. All rights reserved.
 //
 
 #ifndef SIAEnumerator_SIAEnumerator_h

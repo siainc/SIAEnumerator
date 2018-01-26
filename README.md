@@ -1,6 +1,6 @@
 # SIAEnumerator
 
-SIAEnumerator is utility for enumerator. You can code using ruby-like methods.
+SIAEnumerator is utility for enumerator. You can code using ruby-like or swift-like methods.
 
 ## Usage
 

@@ -3,49 +3,63 @@
 //  SIAEnumerator
 //
 //  Created by KUROSAKI Ryota on 2014/12/16.
-//  Copyright (c) 2014-2015 SI Agency Inc. All rights reserved.
+//  Copyright (c) 2014-2018 SI Agency Inc. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface NSDictionary (SIAEnumerator)
+NS_ASSUME_NONNULL_BEGIN
 
-- (id)sia_at:(id)aKey;
-- (id)sia_at:(id)aKey ifNil:(id)ifNil;
-- (id)sia_at:(id)aKey ifNilBlock:(id (^)())ifNilBlock;
+@interface NSDictionary<__covariant KeyType, __covariant ObjectType> (SIAEnumerator)
 
-- (void)sia_each:(void (^)(id key, id obj))block;
-- (void)sia_eachKey:(void (^)(id key))block;
-- (void)sia_eachValue:(void (^)(id obj))block;
+// access element
+- (nullable ObjectType)sia_at:(KeyType)aKey;
+- (nullable ObjectType)sia_at:(KeyType)aKey ifNil:(nullable ObjectType)ifNil;
+- (nullable ObjectType)sia_at:(KeyType)aKey ifNilBlock:(nullable ObjectType (^)(void))ifNilBlock;
 
-- (NSArray *)sia_find:(BOOL (^)(id key, id obj))block;
-- (NSDictionary *)sia_findAll:(BOOL (^)(id key, id obj))block;
-- (NSDictionary *)sia_reject:(BOOL (^)(id key, id obj))block;
-- (NSArray *)sia_assoc:(id)key;
-- (NSArray *)sia_rassoc:(id)value;
+// access all
+- (void)sia_each:(void (^)(KeyType key, ObjectType obj))block;
+- (void)sia_eachKey:(void (^)(KeyType key))block;
+- (void)sia_eachValue:(void (^)(ObjectType obj))block;
+- (NSArray *)sia_map:(id (^)(KeyType key, ObjectType obj))block;
 
+// find
+- (nullable NSArray *)sia_find:(BOOL (^)(KeyType key, ObjectType obj))block;
+- (nullable NSArray *)sia_assoc:(KeyType)key;
+- (nullable NSArray *)sia_rassoc:(ObjectType)value;
+
+// filter
+- (NSDictionary<KeyType, ObjectType> *)sia_filter:(BOOL (^)(KeyType key, ObjectType obj))block;
+- (NSDictionary<KeyType, ObjectType> *)sia_findAll:(BOOL (^)(KeyType key, ObjectType obj))block __attribute__ ((deprecated));
+- (NSDictionary<KeyType, ObjectType> *)sia_reject:(BOOL (^)(KeyType key, ObjectType obj))block;
+
+// transform
 - (NSArray *)sia_flatten;
 - (NSArray *)sia_flattenLevel:(NSUInteger)number;
-- (NSDictionary *)sia_invert;
+- (NSDictionary<KeyType, ObjectType> *)sia_invert;
 
-- (BOOL)sia_all:(BOOL (^)(id key, id obj))predicate;
-- (BOOL)sia_any:(BOOL (^)(id key, id obj))predicate;
-- (NSArray *)sia_map:(id (^)(id key, id obj))block;
+// reduce
+- (BOOL)sia_all:(BOOL (^)(KeyType key, ObjectType obj))predicate;
+- (BOOL)sia_any:(BOOL (^)(KeyType key, ObjectType obj))predicate;
+
+@end
+
+@interface NSDictionary<__covariant KeyType, __covariant ObjectType> (SIAEnumerator2)
+
+- (void)sia_each2:(void (^)(KeyType key, ObjectType obj, BOOL *stop))block;
+- (void)sia_eachKey2:(void (^)(KeyType key, BOOL *stop))block;
+- (void)sia_eachValue2:(void (^)(ObjectType obj, BOOL *stop))block;
+
+- (nullable NSArray *)sia_find2:(BOOL (^)(KeyType key, ObjectType obj, BOOL *stop))block;
+- (NSDictionary<KeyType, ObjectType> *)sia_filter2:(BOOL (^)(KeyType key, ObjectType obj, BOOL *stop))block;
+- (NSDictionary<KeyType, ObjectType> *)sia_findAll2:(BOOL (^)(KeyType key, ObjectType obj, BOOL *stop))block __attribute__ ((deprecated));
+- (NSDictionary<KeyType, ObjectType> *)sia_reject2:(BOOL (^)(KeyType key, ObjectType obj, BOOL *stop))block;
+
+- (NSArray *)sia_map2:(id (^)(KeyType key, ObjectType obj, BOOL *stop))block;
+
+- (BOOL)sia_all2:(BOOL (^)(KeyType key, ObjectType obj, BOOL *stop))predicate;
+- (BOOL)sia_any2:(BOOL (^)(KeyType key, ObjectType obj, BOOL *stop))predicate;
 
 @end
 
-@interface NSDictionary (SIAEnumerator2)
-
-- (void)sia_each2:(void (^)(id key, id obj, BOOL *stop))block;
-- (void)sia_eachKey2:(void (^)(id key, BOOL *stop))block;
-- (void)sia_eachValue2:(void (^)(id obj, BOOL *stop))block;
-
-- (NSArray *)sia_find2:(BOOL (^)(id key, id obj, BOOL *stop))block;
-- (NSDictionary *)sia_findAll2:(BOOL (^)(id key, id obj, BOOL *stop))block;
-- (NSDictionary *)sia_reject2:(BOOL (^)(id key, id obj, BOOL *stop))block;
-
-- (BOOL)sia_all2:(BOOL (^)(id key, id obj, BOOL *stop))predicate;
-- (BOOL)sia_any2:(BOOL (^)(id key, id obj, BOOL *stop))predicate;
-- (NSArray *)sia_map2:(id (^)(id key, id obj, BOOL *stop))block;
-
-@end
+NS_ASSUME_NONNULL_END

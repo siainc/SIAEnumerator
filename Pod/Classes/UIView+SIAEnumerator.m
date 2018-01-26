@@ -3,7 +3,7 @@
 //  SIAEnumerator
 //
 //  Created by KUROSAKI Ryota on 2013/12/20.
-//  Copyright (c) 2013-2014 SI Agency Inc. All rights reserved.
+//  Copyright (c) 2013-2018 SI Agency Inc. All rights reserved.
 //
 
 #import "UIView+SIAEnumerator.h"
@@ -13,27 +13,23 @@
 
 @implementation UIView (SIAEnumerator)
 
-- (NSEnumerator *)sia_superviewEnumerator
-{
+- (NSEnumerator *)sia_superviewEnumerator {
     SIAEnumerator *enumerator = [SIAEnumerator enumeratorWithTraceBlock:^id(NSInteger index, UIView *previousObject) {
         return previousObject ? previousObject.superview : self.superview;
     }];
     return enumerator;
 }
 
-- (NSEnumerator *)sia_recursiveSubviewsEnumerator
-{
+- (NSEnumerator *)sia_recursiveSubviewsEnumerator {
     return [self sia_recursiveSubviewsEnumeratorWithMaxDepth:NSIntegerMax];
 }
 
-- (NSEnumerator *)sia_recursiveSubviewsEnumeratorWithMaxDepth:(NSInteger)maxDepth
-{
+- (NSEnumerator *)sia_recursiveSubviewsEnumeratorWithMaxDepth:(NSInteger)maxDepth {
     SIASubviewsEnumerator *enumerator = [[SIASubviewsEnumerator alloc] initWithView:self maxDepth:maxDepth];
     return enumerator;
 }
 
-- (UIView *)sia_recursiveSubviewAtIndex:(NSInteger)index maxDepth:(NSInteger)maxDepth
-{
+- (nullable UIView *)sia_recursiveSubviewAtIndex:(NSInteger)index maxDepth:(NSInteger)maxDepth {
     UIView *view = nil;
     for (int i = 0; i < index + 1; i++) {
         view = [self sia_nextRecursiveSubviewWithPreviousView:view maxDepth:maxDepth];
@@ -41,8 +37,7 @@
     return view;
 }
 
-- (UIView *)sia_nextRecursiveSubviewWithPreviousView:(UIView *)currentView maxDepth:(NSInteger)maxDepth
-{
+- (nullable UIView *)sia_nextRecursiveSubviewWithPreviousView:(nullable UIView *)currentView maxDepth:(NSInteger)maxDepth {
     if (maxDepth == 0) {
         return nil;
     }
@@ -61,8 +56,7 @@
         
         if (maxDepth < 0 || currentViewDepth < maxDepth) {
             return currentView.subviews.sia_first;
-        }
-        else {
+        } else {
             [self sia_nextSiblingSubviewWithPreviousView:currentView];
         }
     }
@@ -70,23 +64,19 @@
     return [self sia_nextSiblingSubviewWithPreviousView:currentView];
 }
 
-- (UIView *)sia_nextSiblingSubviewWithPreviousView:(UIView *)currentView
-{
+- (nullable UIView *)sia_nextSiblingSubviewWithPreviousView:(UIView *)currentView {
     UIView *parentView = currentView.superview;
     NSInteger index = [parentView.subviews indexOfObject:currentView];
     if (index + 1 < parentView.subviews.count) {
         return parentView.subviews[index + 1];
-    }
-    else if (parentView == self) {
+    } else if (parentView == self) {
         return nil;
-    }
-    else {
+    } else {
         return [self sia_nextSiblingSubviewWithPreviousView:parentView];
     }
 }
 
-- (NSInteger)sia_depthToView:(UIView *)view
-{
+- (NSInteger)sia_depthToView:(UIView *)view {
     if (view == self) {
         // viewがselfの場合、距離は0
         return 0;
@@ -117,8 +107,7 @@
 
 @implementation SIASubviewsEnumerator
 
-- (instancetype)initWithView:(UIView *)rootView maxDepth:(NSInteger)maxDepth
-{
+- (instancetype)initWithView:(UIView *)rootView maxDepth:(NSInteger)maxDepth {
     self = [super init];
     if (self) {
         _rootView = rootView;
@@ -129,16 +118,14 @@
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
                                   objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len
-{
+                                    count:(NSUInteger)len {
     if (self.maxDepth == 0) {
         return 0;
     }
     
     if (buffer != NULL && len > 0) {
         state->itemsPtr = buffer;
-    }
-    else {
+    } else {
         return 0;
     }
     
@@ -155,8 +142,7 @@
             state->extra[0] = (unsigned long)(__bridge_retained void *)v;
             containedCount++;
             state->state++;
-        }
-        else {
+        } else {
             break;
         }
     }
